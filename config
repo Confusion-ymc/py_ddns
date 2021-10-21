@@ -1,0 +1,12 @@
+[Ali]
+access_key = *********
+access_key_secret = *********
+[CF]
+email = 1107238486@qq.com
+api_key = *********
+zone_id = *********
+
+[SET]
+sleep_time = 300
+update_record = www.baidu.com
+client_type = CF

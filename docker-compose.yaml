@@ -1,0 +1,20 @@
+version: '3'
+services:
+  py_ddns_build:
+    image: py_ddns:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: [ "echo", "Build OK." ]
+
+  py_ddns:
+    depends_on:
+      - py_ddns_build
+    image: py_ddns:latest
+    container_name: "py_ddns"
+    restart: always
+    working_dir: /code
+    # command: [ "sh", "-c", "python -u cron.py" ]
+
+
+
