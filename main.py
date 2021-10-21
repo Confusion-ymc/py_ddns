@@ -34,6 +34,7 @@ class AliUpdater:
     def __init__(self, update_record, access_key=None, access_secret=None):
         if not update_record:
             raise Exception('未设置 update_record')
+        self.runner_name = 'aliyun'
         self.update_record = update_record
         self.credentials = AccessKeyCredential(access_key, access_secret)
         self.client = AcsClient(region_id='cn-chengdu', credential=self.credentials)
@@ -78,7 +79,7 @@ class AliUpdater:
             log.info(f'记录正确,无需修改 {name} ---> {ip}')
 
     def run(self):
-        log.info(f'开始执行 -----')
+        log.info(f'{self.runner_name} 开始执行 -----')
         try:
             now_ip = check_ip()
             self.update(self.update_record, now_ip)
@@ -89,6 +90,7 @@ class AliUpdater:
 class CFUpdater(AliUpdater):
     def __init__(self, update_record, email, api_key, zone_id):
         super(CFUpdater, self).__init__(update_record)
+        self.runner_name = 'cloudflare'
         self.email = email
         self.api_key = api_key
         self.zone_id = zone_id
