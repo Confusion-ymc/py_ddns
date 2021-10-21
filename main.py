@@ -79,7 +79,7 @@ class AliUpdater:
             log.info(f'记录正确,无需修改 {name} ---> {ip}')
 
     def run(self):
-        log.info(f'{self.runner_name} 开始执行 -----')
+        log.info(f'-----【{self.runner_name}】 开始执行 -----')
         try:
             now_ip = check_ip()
             self.update(self.update_record, now_ip)
@@ -143,17 +143,15 @@ if __name__ == '__main__':
     record = conf.get('SET', 'update_record')
     check_sleep = conf.getint('SET', 'sleep_time')
 
-    ali_key = conf.get('Ali', 'access_key')
-    ali_secret = conf.get('Ali', 'access_key_secret')
-    cf_email = conf.get('CF', 'email')
-    cf_api_key = conf.get('CF', 'api_key')
-    cf_zone_id = conf.get('CF', 'zone_id')
-
-    clients = {
-        'CF': CFUpdater(record, cf_email, cf_api_key, cf_zone_id),
-        'ALI': AliUpdater(record, ali_key, ali_secret)
-    }
-    set_client = clients[conf.get('SET', 'client_type')]
+    if conf.get('SET', 'client_type') == 'CF':
+        cf_email = conf.get('CF', 'email')
+        cf_api_key = conf.get('CF', 'api_key')
+        cf_zone_id = conf.get('CF', 'zone_id')
+        set_client = CFUpdater(record, cf_email, cf_api_key, cf_zone_id)
+    else:
+        ali_key = conf.get('Ali', 'access_key')
+        ali_secret = conf.get('Ali', 'access_key_secret')
+        set_client = AliUpdater(record, ali_key, ali_secret)
     while True:
         set_client.run()
         time.sleep(check_sleep)
