@@ -1,5 +1,5 @@
 #aliyun-python-sdk-alidns==2.6.29
 #aliyun-python-sdk-core==2.13.35
-cryptography==3.4.8
+#cryptography==3.4.8
 requests==2.26.0
 colorlog==6.4.1
