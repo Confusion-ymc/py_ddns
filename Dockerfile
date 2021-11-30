@@ -3,8 +3,9 @@ FROM python:3.7.6
 WORKDIR /code/
 
 RUN pip config set global.index-url https://mirrors.aliyun.com/pypi/simple
-
+RUN python -m pip install --upgrade pip
 ADD requirements.txt /code/
+
 RUN pip install -r requirements.txt
 ADD . /code
 
