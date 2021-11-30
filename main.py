@@ -6,10 +6,10 @@ import requests
 import re
 import configparser
 
-from aliyunsdkcore.request import CommonRequest
-from aliyunsdkcore.client import AcsClient
-from aliyunsdkcore.auth.credentials import AccessKeyCredential
-from aliyunsdkalidns.request.v20150109.DescribeDomainRecordsRequest import DescribeDomainRecordsRequest
+# from aliyunsdkcore.request import CommonRequest
+# from aliyunsdkcore.client import AcsClient
+# from aliyunsdkcore.auth.credentials import AccessKeyCredential
+# from aliyunsdkalidns.request.v20150109.DescribeDomainRecordsRequest import DescribeDomainRecordsRequest
 
 import send_email
 from logger import log
