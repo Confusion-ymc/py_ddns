@@ -11,6 +11,7 @@ from aliyunsdkcore.client import AcsClient
 from aliyunsdkcore.auth.credentials import AccessKeyCredential
 from aliyunsdkalidns.request.v20150109.DescribeDomainRecordsRequest import DescribeDomainRecordsRequest
 
+import send_email
 from logger import log
 
 
@@ -24,7 +25,7 @@ def check_ip():
     html_data = requests.get(url=url).text
     ip_data = re.findall('Address: (.*?)</body>', html_data)
     if ip_data:
-        print(f'查询IP成功, 当前 {ip_data}， （by {url}）')
+        log.info(f'查询IP成功, 当前 {ip_data}， （by {url}）')
         return ip_data[0]
     else:
         raise Exception(f'查询IP失败！ {html_data}')
@@ -66,7 +67,7 @@ class AliUpdater:
         request.add_query_param('Type', "A")
         request.add_query_param('Value', ip)
 
-        response = self.client.do_action(request)
+        response = self.client.do_action_with_exception(request)
         json_res = json.loads(response)
         return json_res
 
@@ -75,8 +76,10 @@ class AliUpdater:
         if record_id:
             self.set_records(record_id=record_id, name=name, ip=ip)
             log.info(f'更新成功 {name} ---> {ip}  （原 {old_ip}）')
+            send_email.send(f'更新成功 {name} ---> {ip}  （原 {old_ip}）')
         else:
-            log.info(f'记录正确,无需修改 {name} ---> {ip}')
+            pass
+            # log.info(f'记录正确,无需修改 {name} ---> {ip}')
 
     def run(self):
         log.info(f'-----【{self.runner_name}】 开始执行 -----')
@@ -105,7 +108,7 @@ class CFUpdater(AliUpdater):
             'type': 'A',
         }
         response = requests.get(f'https://api.cloudflare.com/client/v4/zones/{self.zone_id}/dns_records',
-                                headers=headers, params=data)
+                                headers=headers, params=data, timeout=20)
         records = response.json()
         for item in records['result']:
             if item['name'] == name and item['type'] == 'A':
@@ -131,7 +134,7 @@ class CFUpdater(AliUpdater):
         }
         response = requests.put(
             f'https://api.cloudflare.com/client/v4/zones/{self.zone_id}/dns_records/{record_id}',
-            headers=headers, json=data)
+            headers=headers, json=data, timeout=20)
         return response.json()
 
 
