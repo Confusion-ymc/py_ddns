@@ -1,4 +1,3 @@
-import json
 import pathlib
 import time
 
@@ -22,7 +21,7 @@ def now_time():
 # 查询记录
 def check_ip():
     url = 'http://checkip.dyndns.com/'
-    html_data = requests.get(url=url).text
+    html_data = requests.get(url=url, timeout=20).text
     ip_data = re.findall('Address: (.*?)</body>', html_data)
     if ip_data:
         log.info(f'查询IP成功, 当前 {ip_data}， （by {url}）')
@@ -153,6 +152,7 @@ class CFUpdater:
             now_ip = check_ip()
             self.update(self.update_record, now_ip)
         except Exception as e:
+            print(e)
             log.error(f'更新失败 {e}')
 
 
